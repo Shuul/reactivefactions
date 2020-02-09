@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<mdscript name="Reactivemain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\x4 extract\libraries\md.xsd">
+  <cues>
+    <cue name="ReactiveInit" version="1">
+      <conditions>
+        <check_any>
+          <event_cue_signalled cue="md.Setup.GameStart" />
+          <event_player_created />
+          <event_cue_signalled />
+          <event_game_loaded />
+        </check_any>
+      </conditions>
+      
+      <actions>
+        <set_value name="$PlayerPower" exact="null" />
+        <show_help duration="10s" custom="'Reactive Faction Reputation mod ver. 0.1 is installed'"/>
+        <!-- FLUFF for power levels -->
+        <set_value name="$PlayerPowerName0" exact="'You are nameless privateer.'"/>
+        <set_value name="$PlayerPowerName1" exact="'You are now Small Organization.'"/>
+        <set_value name="$PlayerPowerName2" exact="'You are now Large Organization.'"/>
+        <set_value name="$PlayerPowerName3" exact="'You are now Minor Faction.'"/>
+        <set_value name="$PlayerPowerName4" exact="'You are now Major Faction.'"/>
+
+        <set_value name="$PlayerPowerFluff0" exact="'You are currently not noticed by Major Factions of the galaxy and your actions with their enemies do not bother them.'"/>
+        <set_value name="$PlayerPowerFluff1" exact="'You are now considered as small organisation with limited influence, some of your positive deals may make their enemies a bit worried'"/>
+        <set_value name="$PlayerPowerFluff2" exact="'Your influence on galaxy arena grows and Major Faction start to pay close attention to your deals with their enemies. '"/>
+        <set_value name="$PlayerPowerFluff3" exact="'You are acknowledged as powerful player on galaxy arena, pay attention to your actions as not everyone will like you to befreind their enemies.'"/>
+        <set_value name="$PlayerPowerFluff4" exact="'Major Factions do now consider you to be equal to them, your positive deals with their enemies can lead to noticable consequences.'"/>
+     </actions>
+     <patch sinceversion="1">
+      <!-- simple reset so the sub cues are called again. -->
+      <reset_cue cue="this"/>
+    </patch>
+      <cues>
+        <cue name="ReactivePlayerPowerUpdate" instantiate="true" checkinterval="3min" checktime="player.age + 30s">
+          <actions>
+
+            <set_value name="$PlayerTotalAssetsCost" exact="0Cr" />
+
+            <!-- <do_if value="$PlayerPower?">
+              <remove_value name="$PlayerPower" />
+            </do_if> -->
+
+            <!-- <do_if value="$CivAssetCostModifier?">
+              <remove_value name="$CivAssetCostModifier"/>
+            </do_if> -->
+
+            <!-- cost modifier for civilian ships (NOT USED as of now) -->
+            <set_value name="$CivAssetCostModifier" exact="(6.5Cr)" />
+
+            <!-- calculating total assets cost -->
+            <find_object name="$PlayerAssetsList" owner="faction.player" space="player.galaxy"  multiple="true" recursive="true" />
+            <do_for_each name="$Asset" in="$PlayerAssetsList">
+              <do_if value="$Asset.value ge 150000Cr">
+                <do_if value="$Asset.primarypurpose == purpose.trade">
+                  <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + $Asset.value )/1Cr" operation="add" comment="round"/>
+                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                </do_if>
+
+                <do_elseif value="$Asset.primarypurpose == purpose.mine">
+                  <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + $Asset.value )/1Cr" operation="add" comment="round"/>
+                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                </do_elseif>
+
+                <do_elseif value="$Asset.primarypurpose == purpose.auxiliary">
+                  <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + $Asset.value )/1Cr" operation="add" comment="round"/>
+                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                </do_elseif>
+
+                <do_elseif value="$Asset.primarypurpose == purpose.production">
+                  <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + $Asset.value )/1Cr" operation="add" comment="round"/>
+                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                </do_elseif>
+
+                <do_else>
+                  <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + $Asset.value)/1Cr" operation="add" comment="round"/>
+                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                </do_else>
+              </do_if>
+            </do_for_each>
+
+            <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + player.money)/1Cr" operation="add" comment="round"/>
+
+            <do_if value="$PlayerTotalAssetsCost lt 70000000">
+              <do_if value="$PlayerPower != null">
+                <set_value name="$PlayerPower" exact="0" />
+                <show_help duration="10s" custom="$PlayerPowerFluff0" />
+                <write_to_logbook category="news" title="$PlayerPowerName0" text="$PlayerPowerFluff0" />
+              </do_if>
+              <do_else>
+                <set_value name="$OldPlayerPower" exact="$PlayerPower" />
+                <set_value name="$PlayerPower" exact="0" />
+                <do_if value="$PlayerPower != $OldPlayerPower">
+                  <show_help duration="10s" custom="$PlayerPowerFluff0" />
+                  <write_to_logbook category="news" title="$PlayerPowerName0" text="$PlayerPowerFluff0" />
+                </do_if>
+               </do_else>
+              <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
+            </do_if>
+            <do_elseif value="$PlayerTotalAssetsCost lt 150000000">
+              <set_value name="$OldPlayerPower" exact="$PlayerPower" />
+              <set_value name="$PlayerPower" exact="1" />
+              <do_if value="$PlayerPower != $OldPlayerPower">
+                <show_help duration="10s" custom="$PlayerPowerFluff1" />
+                <write_to_logbook category="news" title="$PlayerPowerName1" text="$PlayerPowerFluff1" />
+              </do_if>
+              <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
+            </do_elseif>
+            <do_elseif value="$PlayerTotalAssetsCost lt 400000000">
+              <set_value name="$OldPlayerPower" exact="$PlayerPower" />
+              <set_value name="$PlayerPower" exact="2" />
+              <do_if value="$PlayerPower != $OldPlayerPower">
+                <show_help duration="10s" custom="$PlayerPowerFluff2" />
+                <write_to_logbook category="news" title="$PlayerPowerName2" text="$PlayerPowerFluff2" />
+              </do_if>
+              <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
+            </do_elseif>
+            <do_elseif value="$PlayerTotalAssetsCost lt 800000000">
+              <set_value name="$OldPlayerPower" exact="$PlayerPower" />
+              <set_value name="$PlayerPower" exact="3" />
+              <do_if value="$PlayerPower != $OldPlayerPower">
+                <show_help duration="10s" custom="$PlayerPowerFluff3" />
+                <write_to_logbook category="news" title="$PlayerPowerName3" text="$PlayerPowerFluff3" />
+              </do_if>
+              <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
+            </do_elseif>
+            <do_else>
+              <set_value name="$OldPlayerPower" exact="$PlayerPower" />
+              <set_value name="$PlayerPower" exact="4" />
+              <do_if value="$PlayerPower != $OldPlayerPower">
+                <show_help duration="10s" custom="$PlayerPowerFluff4" />
+                <write_to_logbook category="news" title="$PlayerPowerName4" text="$PlayerPowerFluff4" />
+              </do_if>
+              <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
+            </do_else>
+            <remove_value name="$PlayerTotalAssetsCost" />
+          </actions>
+        </cue>
+        <cue name="ReactiveApplyRepPenalty" instantiate="true">
+          <conditions>
+            <event_player_relation_changed/>
+            
+            <!-- only for positive changes -->
+            <check_value value="event.object == null and event.param != null and event.param2.{1} gt event.param2.{2}" />
+          </conditions>
+          <actions>
+            <set_value name="$FactionMain" exact="event.param" />
+            <set_value name="$RepDiff" exact="event.param2.{1} - event.param2.{2}"/>
+            <!-- Power level hit multiplayers -->
+            <set_value name="$RepMultPowerLvl1" exact="0.3" />
+            <set_value name="$RepMultPowerLvl2" exact="0.9" />
+            <set_value name="$RepMultPowerLvl3" exact="1.2" />
+            <set_value name="$RepMultPowerLvl4" exact="2" />
+            
+
+            <get_factions_by_relation relation="enemy" faction="$FactionMain" result="$EnemiesList " />
+            
+            <do_for_each name="$Enemy" in="$EnemiesList">
+              
+            <do_if value="$PlayerPower == 0 and $Enemy != faction.smuggler and $Enemy != faction.criminal and $Enemy != faction.civilian and $Enemy != faction.xenon and $Enemy != faction.khaak">
+              <!-- do nothing on power level 0 -->
+              <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was not changed (PL0) with ' + $Enemy + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+            </do_if>
+
+            <do_elseif value="$PlayerPower == 1 and $Enemy != faction.holyorderfanatic and $Enemy != null and $Enemy != faction.scaleplate and $Enemy != faction.smuggler and $Enemy != faction.criminal and $Enemy != faction.civilian and $Enemy != faction.xenon and $Enemy != faction.khaak">
+              <set_value name="$RepHit" exact="($RepDiff * $RepMultPowerLvl1) * -1"/>
+              <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="$RepHit" />
+              <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              <remove_value name="$RepHit" />
+            </do_elseif>
+
+            <do_elseif value="$PlayerPower == 2 and $Enemy != faction.holyorderfanatic and $Enemy != null and $Enemy != faction.scaleplate and $Enemy != faction.smuggler and $Enemy != faction.criminal and $Enemy != faction.civilian and $Enemy != faction.xenon and $Enemy != faction.khaak">
+              <set_value name="$RepHit" exact="($RepDiff * $RepMultPowerLvl2) * -1"/>
+              <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="$RepHit" />
+              <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              <remove_value name="$RepHit" />
+            </do_elseif>
+
+            <do_elseif value="$PlayerPower == 3 and $Enemy != faction.holyorderfanatic and $Enemy != null and $Enemy != faction.scaleplate and $Enemy != faction.smuggler and $Enemy != faction.criminal and $Enemy != faction.civilian and $Enemy != faction.xenon and $Enemy != faction.khaak">
+              <set_value name="$RepHit" exact="($RepDiff * $RepMultPowerLvl3) * -1"/>
+              <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="$RepHit" />
+              <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              <remove_value name="$RepHit" />
+            </do_elseif>
+
+            <do_elseif value="$PlayerPower == 4 and $Enemy != faction.holyorderfanatic and $Enemy != null and $Enemy != faction.scaleplate and $Enemy != faction.smuggler and $Enemy != faction.criminal and $Enemy != faction.civilian and $Enemy != faction.xenon and $Enemy != faction.khaak">
+              <set_value name="$RepHit" exact="($RepDiff * $RepMultPowerLvl4) * -1"/>
+              <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="$RepHit" />
+              <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              <remove_value name="$RepHit" />
+            </do_elseif>
+
+            <do_else>
+              <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; Excluded faction ' + $Enemy + ' or something wrong with power level'" output="false" append="true" />
+            </do_else>
+
+            </do_for_each>
+          </actions>
+        </cue>
+      </cues>
+      
+    </cue>
+
+  </cues>
+</mdscript>
