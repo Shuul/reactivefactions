@@ -13,7 +13,7 @@
       </conditions>
       
       <actions>
-        <set_value name="$PlayerPower" exact="null" />
+        <set_value name="$PlayerPower" exact="99" />
         <show_help duration="10s" custom="'Reactive Faction Reputation mod ver. 0.1 is installed'"/>
         <!-- FLUFF for power levels -->
         <set_value name="$PlayerPowerName0" exact="'You are nameless privateer.'"/>
@@ -33,7 +33,7 @@
       <reset_cue cue="this"/>
     </patch>
       <cues>
-        <cue name="ReactivePlayerPowerUpdate" instantiate="true" checkinterval="3min" checktime="player.age + 30s">
+        <cue name="ReactivePlayerPowerUpdate" instantiate="true" checkinterval="20min" checktime="player.age + 60s">
           <actions>
 
             <set_value name="$PlayerTotalAssetsCost" exact="0Cr" />
@@ -83,7 +83,7 @@
             <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + player.money)/1Cr" operation="add" comment="round"/>
 
             <do_if value="$PlayerTotalAssetsCost lt 70000000">
-              <do_if value="$PlayerPower != null">
+              <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="0" />
                 <show_help duration="10s" custom="$PlayerPowerFluff0" />
                 <write_to_logbook category="news" title="$PlayerPowerName0" text="$PlayerPowerFluff0" />
