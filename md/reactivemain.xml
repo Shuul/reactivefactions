@@ -2,7 +2,7 @@
 
 <mdscript name="Reactivemain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\x4 extract\libraries\md.xsd">
   <cues>
-    <cue name="ReactiveInit" version="1">
+    <cue name="ReactiveInit" version="2">
       <conditions>
         <check_any>
           <event_cue_signalled cue="md.Setup.GameStart" />
@@ -28,7 +28,7 @@
         <set_value name="$PlayerPowerFluff3" exact="'You are acknowledged as powerful player on galaxy arena, pay attention to your actions as not everyone will like you to befreind their enemies.'"/>
         <set_value name="$PlayerPowerFluff4" exact="'Major Factions do now consider you to be equal to them, your positive deals with their enemies can lead to noticable consequences.'"/>
      </actions>
-     <patch sinceversion="1">
+     <patch sinceversion="2">
       <!-- simple reset so the sub cues are called again. -->
       <reset_cue cue="this"/>
     </patch>
