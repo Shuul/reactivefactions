@@ -181,8 +181,7 @@
             <set_value name="$RepMultPowerLvl3" exact="1.2" />
             <set_value name="$RepMultPowerLvl4" exact="2" />
             
-
-            <get_factions_by_relation relation="enemy" faction="$FactionMain" result="$EnemiesList " />
+            <get_factions_by_relation relation="killmilitary" faction="$FactionMain" result="$EnemiesList" />
             
             <do_for_each name="$Enemy" in="$EnemiesList">
               
