@@ -192,29 +192,53 @@
 
             <do_elseif value="$PlayerPower == 1 and $Enemy != faction.holyorderfanatic and $Enemy != null and $Enemy != faction.scaleplate and $Enemy != faction.smuggler and $Enemy != faction.criminal and $Enemy != faction.civilian and $Enemy != faction.xenon and $Enemy != faction.khaak">
               <set_value name="$RepHit" exact="($RepDiff * $RepMultPowerLvl1) * -1"/>
-              <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="$RepHit" />
-              <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              <do_if value="$Enemy.relationto.{$FactionMain} lt $Enemy.relationto.{faction.player}">
+                <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="(($Enemy.relationto.{faction.player} + $RepHit), -1).max" />
+                <set_faction_relation faction="faction.player" otherfaction="$Enemy" value="$Enemy.relationto.{faction.player}" />
+                <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              </do_if>
+              <do_else>
+                <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was not changed with ' + $Enemy + ' for: ' + $RepHit + ' due to ' + $FactionMain + ' player already having a lower reputation with current power level of ' + $PlayerPower" output="false" append="true" />
+              </do_else>              
               <remove_value name="$RepHit" />
             </do_elseif>
 
             <do_elseif value="$PlayerPower == 2 and $Enemy != faction.holyorderfanatic and $Enemy != null and $Enemy != faction.scaleplate and $Enemy != faction.smuggler and $Enemy != faction.criminal and $Enemy != faction.civilian and $Enemy != faction.xenon and $Enemy != faction.khaak">
               <set_value name="$RepHit" exact="($RepDiff * $RepMultPowerLvl2) * -1"/>
-              <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="$RepHit" />
-              <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              <do_if value="$Enemy.relationto.{$FactionMain} lt $Enemy.relationto.{faction.player}">
+                <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="(($Enemy.relationto.{faction.player} + $RepHit), -1).max" />
+                <set_faction_relation faction="faction.player" otherfaction="$Enemy" value="$Enemy.relationto.{faction.player}" />
+                <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              </do_if>
+              <do_else>
+                <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was not changed with ' + $Enemy + ' for: ' + $RepHit + ' due to ' + $FactionMain + ' player already having a lower reputation with current power level of ' + $PlayerPower" output="false" append="true" />
+              </do_else>              
               <remove_value name="$RepHit" />
             </do_elseif>
 
             <do_elseif value="$PlayerPower == 3 and $Enemy != faction.holyorderfanatic and $Enemy != null and $Enemy != faction.scaleplate and $Enemy != faction.smuggler and $Enemy != faction.criminal and $Enemy != faction.civilian and $Enemy != faction.xenon and $Enemy != faction.khaak">
               <set_value name="$RepHit" exact="($RepDiff * $RepMultPowerLvl3) * -1"/>
-              <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="$RepHit" />
-              <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              <do_if value="$Enemy.relationto.{$FactionMain} lt $Enemy.relationto.{faction.player}">
+                <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="(($Enemy.relationto.{faction.player} + $RepHit), -1).max" />
+                <set_faction_relation faction="faction.player" otherfaction="$Enemy" value="$Enemy.relationto.{faction.player}" />
+                <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              </do_if>
+              <do_else>
+                <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was not changed with ' + $Enemy + ' for: ' + $RepHit + ' due to ' + $FactionMain + ' player already having a lower reputation with current power level of ' + $PlayerPower" output="false" append="true" />
+              </do_else>              
               <remove_value name="$RepHit" />
             </do_elseif>
 
             <do_elseif value="$PlayerPower == 4 and $Enemy != faction.holyorderfanatic and $Enemy != null and $Enemy != faction.scaleplate and $Enemy != faction.smuggler and $Enemy != faction.criminal and $Enemy != faction.civilian and $Enemy != faction.xenon and $Enemy != faction.khaak">
               <set_value name="$RepHit" exact="($RepDiff * $RepMultPowerLvl4) * -1"/>
-              <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="$RepHit" />
-              <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              <do_if value="$Enemy.relationto.{$FactionMain} lt $Enemy.relationto.{faction.player}">
+                <set_faction_relation faction="$Enemy" otherfaction="faction.player" value="(($Enemy.relationto.{faction.player} + $RepHit), -1).max" />
+                <set_faction_relation faction="faction.player" otherfaction="$Enemy" value="$Enemy.relationto.{faction.player}" />
+                <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
+              </do_if>
+              <do_else>
+                <debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was not changed with ' + $Enemy + ' for: ' + $RepHit + ' due to ' + $FactionMain + ' player already having a lower reputation with current power level of ' + $PlayerPower" output="false" append="true" />
+              </do_else>              
               <remove_value name="$RepHit" />
             </do_elseif>
 
