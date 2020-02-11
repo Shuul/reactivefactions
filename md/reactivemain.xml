@@ -206,8 +206,8 @@
 							<set_value name="$RepHit" exact="($RepDiff * $RepMultPowerLvl4) * -1"/>
 						</do_if>
 						<do_if value="$Enemy.relationto.{$FactionMain} lt $Enemy.relationto.{faction.player}">
-							<set_faction_relation faction="$Enemy" otherfaction="faction.player" value="[($Enemy.relationto.{faction.player} + $RepHit), -1].max" />
-							<set_faction_relation faction="faction.player" otherfaction="$Enemy" value="$Enemy.relationto.{faction.player}" />
+							<set_faction_relation faction="$Enemy" otherfaction="faction.player" value="[($Enemy.relationto.{faction.player} + $RepHit), -1].max" reason="null"/>
+							<set_faction_relation faction="faction.player" otherfaction="$Enemy" value="$Enemy.relationto.{faction.player}" reason="null"/>
 							<debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
 						</do_if>
 						<do_elseif value="$Enemy.relationto.{$FactionMain} ge $Enemy.relationto.{faction.player}">
