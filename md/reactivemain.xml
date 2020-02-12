@@ -186,8 +186,8 @@
             <get_factions_by_relation relation="killmilitary" faction="$FactionMain" result="$EnemiesList" />
             
             <do_for_each name="$Enemy" in="$EnemiesList">
-				<!-- Remove buccaneers, holyorderfanatic, tempest, trinity when added. Why not scaleplate? -->
-				<do_if value="($Enemy != null) and ($Enemy != faction.buccaneers) and ($Enemy != faction.civilian) and ($Enemy != faction.criminal) and ($Enemy != faction.holyorderfanatic) and ($Enemy != faction.khaak) and ($Enemy != faction.scaleplate) and ($Enemy != faction.smuggler) and ($Enemy != faction.tempest) and ($Enemy != faction.trinity) and ($Enemy != faction.visitor) and ($Enemy != faction.xenon)">
+				<!-- Remove buccaneers, holyorderfanatic, tempest, trinity when added. -->
+				<do_if value="($Enemy != null) and ($Enemy != faction.buccaneers) and ($Enemy != faction.civilian) and ($Enemy != faction.criminal) and ($Enemy != faction.holyorderfanatic) and ($Enemy != faction.khaak) and ($Enemy != faction.smuggler) and ($Enemy != faction.tempest) and ($Enemy != faction.trinity) and ($Enemy != faction.visitor) and ($Enemy != faction.xenon)">
 					<do_if value="($PlayerPower == 0)">
 						<!-- do nothing on power level 0 -->
 						<debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was not changed (PL0) with ' + $Enemy + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
@@ -206,6 +206,32 @@
 							<set_value name="$RepHit" exact="($RepDiff * $RepMultPowerLvl4) * -1"/>
 						</do_if>
 						<do_if value="$Enemy.relationto.{$FactionMain} lt $Enemy.relationto.{faction.player}">
+							<do_if value="((($Enemy.relationto.{faction.player} + $RepHit) lt 0.1) and ($Enemy.relationto.{faction.player} ge 0.1)) or ((($Enemy.relationto.{faction.player} + $RepHit) lt 0.01) and ($Enemy.relationto.{faction.player} ge 0.01)) or ((($Enemy.relationto.{faction.player} + $RepHit) lt -0.01) and ($Enemy.relationto.{faction.player} ge -0.01)) or ((($Enemy.relationto.{faction.player} + $RepHit) lt -0.1) and ($Enemy.relationto.{faction.player} ge -0.1)) or ((($Enemy.relationto.{faction.player} + $RepHit) lt -0.32) and ($Enemy.relationto.{faction.player} ge -0.32))">
+								<set_value name="$oldnum" exact="faction.player.relation.{$Enemy.relationto.{faction.player}}.uivalue" />
+								<set_value name="$newnum" exact="faction.player.relation.{$Enemy.relationto.{faction.player} + $RepHit}.uivalue" />
+								<set_value name="$tickertext" exact="['', '', {1001,43} + {1001,120}, $Enemy.name, {1015,250} + {1001,120}, $newnum]" comment="Faction: / Current reputation:"/>
+								<do_if value="$newnum != $oldnum">
+									<set_value name="$tickertext.{1}" exact="{1001,120}" comment="Preceding text will be inserted later" />
+									<set_value name="$tickertext.{2}" exact="(if $newnum gt $oldnum then '+' else '') + ($newnum - $oldnum)" />
+								</do_if>
+								<set_value name="$tickertext.{1}" exact="{1015,15} + $tickertext.{1}" comment="Reputation lost" />
+								<do_if value="notification.reputation_lost.active">
+									<show_notification text="$tickertext" sound="ui_mon_eve_notoriety_down" />
+								</do_if>
+								<do_if value="$tickertext.{2} == ''">
+									<set_value name="$title" exact="$tickertext.{1}" />
+								</do_if>
+								<do_else>
+									<set_value name="$title" exact="$tickertext.{1} + ' ' + $tickertext.{2}" />
+								</do_else>
+								<set_value name="$logtext" exact="[{1015,250} + {1001,120}, $newnum]" />
+								<write_to_logbook category="general" title="$title" faction="$Enemy" text="$logtext" />
+								<remove_value name="$oldnum" />
+								<remove_value name="$newnum" />
+								<remove_value name="$tickertext" />
+								<remove_value name="$title" />
+								<remove_value name="$logtext" />
+							</do_if>
 							<set_faction_relation faction="$Enemy" otherfaction="faction.player" value="[($Enemy.relationto.{faction.player} + $RepHit), -1].max" reason="null"/>
 							<set_faction_relation faction="faction.player" otherfaction="$Enemy" value="$Enemy.relationto.{faction.player}" reason="null"/>
 							<debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
@@ -220,6 +246,8 @@
 					<debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; Excluded faction ' + $Enemy + ' or something wrong with power level'" output="false" append="true" />
 				</do_else>
             </do_for_each>
+			<remove_value name="$Enemy" />
+			<remove_value name="$EnemiesList" />
           </actions>
         </cue>
       </cues>
