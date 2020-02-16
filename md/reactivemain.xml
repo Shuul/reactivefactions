@@ -2,7 +2,7 @@
 
 <mdscript name="Reactivemain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\x4 extract\libraries\md.xsd">
   <cues>
-    <cue name="ReactiveInit" version="2">
+    <cue name="ReactiveInit" version="3">
       <conditions>
         <check_any>
           <event_cue_signalled cue="md.Setup.GameStart" />
@@ -14,7 +14,7 @@
       
       <actions>
         <set_value name="$PlayerPower" exact="99" />
-        <show_help duration="10s" custom="'Reactive Faction Reputation mod ver. 0.1 is installed'"/>
+        <show_help duration="10s" custom="'Reactive Faction Reputation mod ver. 1.0 is installed'"/>
         <!-- FLUFF for power levels -->
         <set_value name="$PlayerPowerName0" exact="'You are nameless privateer.'"/>
         <set_value name="$PlayerPowerName1" exact="'You are now Small Organization.'"/>
@@ -28,7 +28,7 @@
         <set_value name="$PlayerPowerFluff3" exact="'You are acknowledged as powerful player on galaxy arena, pay attention to your actions as not everyone will like you to befreind their enemies.'"/>
         <set_value name="$PlayerPowerFluff4" exact="'Major Factions do now consider you to be equal to them, your positive deals with their enemies can lead to noticable consequences.'"/>
      </actions>
-     <patch sinceversion="2">
+     <patch sinceversion="3">
       <!-- simple reset so the sub cues are called again. -->
       <reset_cue cue="this"/>
     </patch>
@@ -85,15 +85,15 @@
             <do_if value="$PlayerTotalAssetsCost lt 70000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="0" />
-                <show_help duration="10s" custom="$PlayerPowerFluff0" />
-                <write_to_logbook category="news" title="$PlayerPowerName0" text="$PlayerPowerFluff0" />
+                <show_help duration="30s" custom="$PlayerPowerFluff0" />
+                <write_to_logbook category="tips" title="$PlayerPowerName0" text="$PlayerPowerFluff0" />
               </do_if>
               <do_else>
                 <set_value name="$OldPlayerPower" exact="$PlayerPower" />
                 <set_value name="$PlayerPower" exact="0" />
                 <do_if value="$PlayerPower != $OldPlayerPower">
-                  <show_help duration="10s" custom="$PlayerPowerFluff0" />
-                  <write_to_logbook category="news" title="$PlayerPowerName0" text="$PlayerPowerFluff0" />
+                  <show_help duration="30s" custom="$PlayerPowerFluff0" />
+                  <write_to_logbook category="tips" title="$PlayerPowerName0" text="$PlayerPowerFluff0" />
                 </do_if>
                </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
@@ -101,15 +101,15 @@
             <do_elseif value="$PlayerTotalAssetsCost lt 150000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="1" />
-                <show_help duration="10s" custom="$PlayerPowerFluff1" />
-                <write_to_logbook category="news" title="$PlayerPowerName1" text="$PlayerPowerFluff1" />
+                <show_help duration="30s" custom="$PlayerPowerFluff1" />
+                <write_to_logbook category="tips" title="$PlayerPowerName1" text="$PlayerPowerFluff1" />
               </do_if>
               <do_else>
                 <set_value name="$OldPlayerPower" exact="$PlayerPower" />
                 <set_value name="$PlayerPower" exact="1" />
                 <do_if value="$PlayerPower != $OldPlayerPower">
-                  <show_help duration="10s" custom="$PlayerPowerFluff1" />
-                  <write_to_logbook category="news" title="$PlayerPowerName1" text="$PlayerPowerFluff1" />
+                  <show_help duration="30s" custom="$PlayerPowerFluff1" />
+                  <write_to_logbook category="tips" title="$PlayerPowerName1" text="$PlayerPowerFluff1" />
                 </do_if>
               </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
@@ -117,15 +117,15 @@
             <do_elseif value="$PlayerTotalAssetsCost lt 400000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="2" />
-                <show_help duration="10s" custom="$PlayerPowerFluff2" />
-                <write_to_logbook category="news" title="$PlayerPowerName2" text="$PlayerPowerFluff2" />
+                <show_help duration="30s" custom="$PlayerPowerFluff2" />
+                <write_to_logbook category="tips" title="$PlayerPowerName2" text="$PlayerPowerFluff2" />
               </do_if>
               <do_else>
                 <set_value name="$OldPlayerPower" exact="$PlayerPower" />
                 <set_value name="$PlayerPower" exact="2" />
                 <do_if value="$PlayerPower != $OldPlayerPower">
-                  <show_help duration="10s" custom="$PlayerPowerFluff2" />
-                  <write_to_logbook category="news" title="$PlayerPowerName2" text="$PlayerPowerFluff2" />
+                  <show_help duration="30s" custom="$PlayerPowerFluff2" />
+                  <write_to_logbook category="tips" title="$PlayerPowerName2" text="$PlayerPowerFluff2" />
                 </do_if>
               </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
@@ -133,15 +133,15 @@
             <do_elseif value="$PlayerTotalAssetsCost lt 800000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="3" />
-                <show_help duration="10s" custom="$PlayerPowerFluff3" />
-                <write_to_logbook category="news" title="$PlayerPowerName3" text="$PlayerPowerFluff3" />
+                <show_help duration="30s" custom="$PlayerPowerFluff3" />
+                <write_to_logbook category="tips" title="$PlayerPowerName3" text="$PlayerPowerFluff3" />
               </do_if>
               <do_else>
                 <set_value name="$OldPlayerPower" exact="$PlayerPower" />
                 <set_value name="$PlayerPower" exact="3" />
                 <do_if value="$PlayerPower != $OldPlayerPower">
-                  <show_help duration="10s" custom="$PlayerPowerFluff3" />
-                  <write_to_logbook category="news" title="$PlayerPowerName3" text="$PlayerPowerFluff3" />
+                  <show_help duration="30s" custom="$PlayerPowerFluff3" />
+                  <write_to_logbook category="tips" title="$PlayerPowerName3" text="$PlayerPowerFluff3" />
                 </do_if> 
               </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
@@ -149,15 +149,15 @@
             <do_else>
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="4" />
-                <show_help duration="10s" custom="$PlayerPowerFluff4" />
-                <write_to_logbook category="news" title="$PlayerPowerName4" text="$PlayerPowerFluff4" />
+                <show_help duration="30s" custom="$PlayerPowerFluff4" />
+                <write_to_logbook category="tips" title="$PlayerPowerName4" text="$PlayerPowerFluff4" />
               </do_if>
               <do_else>
                 <set_value name="$OldPlayerPower" exact="$PlayerPower" />
                 <set_value name="$PlayerPower" exact="4" />
                 <do_if value="$PlayerPower != $OldPlayerPower">
-                  <show_help duration="10s" custom="$PlayerPowerFluff4" />
-                  <write_to_logbook category="news" title="$PlayerPowerName4" text="$PlayerPowerFluff4" />
+                  <show_help duration="30s" custom="$PlayerPowerFluff4" />
+                  <write_to_logbook category="tips" title="$PlayerPowerName4" text="$PlayerPowerFluff4" />
                 </do_if>
               </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
