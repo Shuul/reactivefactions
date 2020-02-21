@@ -186,8 +186,8 @@
             <get_factions_by_relation relation="killmilitary" faction="$FactionMain" result="$EnemiesList" />
             
             <do_for_each name="$Enemy" in="$EnemiesList">
-				<!-- Remove buccaneers, holyorderfanatic, tempest, trinity when added. -->
-				<do_if value="($Enemy != null) and ($Enemy != faction.buccaneers) and ($Enemy != faction.civilian) and ($Enemy != faction.criminal) and ($Enemy != faction.holyorderfanatic) and ($Enemy != faction.khaak) and ($Enemy != faction.smuggler) and ($Enemy != faction.tempest) and ($Enemy != faction.trinity) and ($Enemy != faction.visitor) and ($Enemy != faction.xenon)">
+				<!-- Remove buccaneers, holyorderfanatic,  trinity when added. -->
+				<do_if value="($Enemy != null) and ($Enemy != faction.buccaneers) and ($Enemy != faction.civilian) and ($Enemy != faction.criminal) and ($Enemy != faction.holyorderfanatic) and ($Enemy != faction.khaak) and ($Enemy != faction.smuggler)) and ($Enemy != faction.trinity) and ($Enemy != faction.visitor) and ($Enemy != faction.xenon)">
 					<do_if value="($PlayerPower == 0)">
 						<!-- do nothing on power level 0 -->
 						<debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was not changed (PL0) with ' + $Enemy + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower" output="false" append="true" />
