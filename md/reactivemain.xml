@@ -178,9 +178,9 @@
             <set_value name="$FactionMain" exact="event.param" />
             <set_value name="$RepDiff" exact="event.param2.{1} - event.param2.{2}"/>
             <!-- Power level hit multiplayers -->
-            <set_value name="$RepMultPowerLvl1" exact="0.3" />
-            <set_value name="$RepMultPowerLvl2" exact="0.9" />
-            <set_value name="$RepMultPowerLvl3" exact="1.2" />
+            <set_value name="$RepMultPowerLvl1" exact="0.25" />
+            <set_value name="$RepMultPowerLvl2" exact="0.75" />
+            <set_value name="$RepMultPowerLvl3" exact="1.25" />
             <set_value name="$RepMultPowerLvl4" exact="2" />
             
             <get_factions_by_relation relation="killmilitary" faction="$FactionMain" result="$EnemiesList" />
