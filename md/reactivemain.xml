@@ -171,7 +171,7 @@
             <!-- only for positive changes -->
             <check_value value="event.object == null and event.param != null and event.param2.{1} gt event.param2.{2}" />
             <!-- check if change is not too big to be natural -->
-            <!-- <check_value value="event.param2.{1} gt event.param2.{2}" /> -->
+            <check_value value="[(event.param2.{1} - event.param2.{2}), 0.032].min" />
 			<!-- to prevent running before power is checked -->
 		    	<check_value value="$PlayerPower != 99" />
           </conditions>
