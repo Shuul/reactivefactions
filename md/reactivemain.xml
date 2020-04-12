@@ -14,7 +14,7 @@
       
       <actions>
         <set_value name="$PlayerPower" exact="99" />
-        <show_help duration="10s" custom="'Reactive Faction Reputation mod ver. 1.3 is installed'"/>
+        <show_help duration="10s" custom="'Reactive Faction Reputation mod ver. 1.4 is installed'"/>
         <!-- FLUFF for power levels -->
         <set_value name="$PlayerPowerName0" exact="'You are nameless privateer.'"/>
         <set_value name="$PlayerPowerName1" exact="'You are now Small Organization.'"/>
@@ -33,7 +33,7 @@
       <reset_cue cue="this"/>
     </patch>
       <cues>
-        <cue name="ReactivePlayerPowerUpdate" instantiate="true" checkinterval="1min" checktime="player.age + 60s">
+        <cue name="ReactivePlayerPowerUpdate" instantiate="true" checkinterval="20min" checktime="player.age + 60s">
           <actions>
 
             <set_value name="$PlayerTotalAssetsCost" exact="0Cr" />
@@ -54,33 +54,33 @@
             <do_for_each name="$Asset" in="$PlayerAssetsList">
               <do_if value="$Asset.value ge 150000Cr">
                 <do_if value="$Asset.primarypurpose == purpose.trade">
-                  <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + $Asset.value )/1Cr" comment="round"/>
+                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value )/1Cr" operation="add" comment="round"/>
                   <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_if>
 
                 <do_elseif value="$Asset.primarypurpose == purpose.mine">
-                  <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + $Asset.value )/1Cr" comment="round"/>
+                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value )/1Cr" operation="add" comment="round"/>
                   <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_elseif>
 
                 <do_elseif value="$Asset.primarypurpose == purpose.auxiliary">
-                  <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + $Asset.value )/1Cr" comment="round"/>
+                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value )/1Cr" operation="add" comment="round"/>
                   <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_elseif>
 
                 <do_elseif value="$Asset.primarypurpose == purpose.production">
-                  <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + $Asset.value )/1Cr" comment="round"/>
+                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value )/1Cr" operation="add" comment="round"/>
                   <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_elseif>
 
                 <do_else>
-                  <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + $Asset.value)/1Cr" comment="round"/>
+                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value)/1Cr" operation="add" comment="round"/>
                   <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_else>
               </do_if>
             </do_for_each>
 
-            <set_value name="$PlayerTotalAssetsCost" exact="($PlayerTotalAssetsCost + player.money)/1Cr" comment="round"/>
+            <set_value name="$PlayerTotalAssetsCost" exact="(player.money)/1Cr"  operation="add" comment="round"/>
 
             <do_if value="$PlayerTotalAssetsCost lt 100000000">
               <do_if value="$PlayerPower == 99">
@@ -168,9 +168,10 @@
         <cue name="ReactiveApplyRepPenalty" instantiate="true">
           <conditions>
             <event_player_relation_changed/>
-            
             <!-- only for positive changes -->
             <check_value value="event.object == null and event.param != null and event.param2.{1} gt event.param2.{2}" />
+            <!-- check if change is not too big to be natural -->
+            <!-- <check_value value="event.param2.{1} gt event.param2.{2}" /> -->
 			<!-- to prevent running before power is checked -->
 		    	<check_value value="$PlayerPower != 99" />
           </conditions>
