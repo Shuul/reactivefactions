@@ -215,7 +215,7 @@
 							<set_value name="$FactionTwo" exact="faction.player" />
 							<set_value name="$UIRelationChange" exact="-2" />
 							<include_actions ref="CalculateUiValueRepChange" />
-							<do_if value="$RepHit lt $AbsoluteRepValueChange">
+							<do_if value="$RepHit lt $AbsoluteRepValueChange and $AbsoluteRepValueChange != null">
 								<debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; RepHit: ' + $RepHit + ' was harsher than -2 UI. Changed to AbsoluteRepValueChange: ' + $AbsoluteRepValueChange" output="false" append="true" />
 								<set_value name="$RepHit" exact="$AbsoluteRepValueChange" />
 							</do_if>
@@ -254,21 +254,22 @@
 				<do_if value="$UIRelationChange != 0">
 					<set_value name="$OldUIRepValue" exact="$FactionOne.relation.{$FactionOne.relationto.{$FactionTwo}}.uivalue" />
 					<set_value name="$OldAbsoluteRepValue" exact="$FactionOne.relationto.{$FactionTwo}" />
-					<set_value name="$RepChangeNegativeorPositiveMod" exact="if ($UIRelationChange lt 0) then (-1) else (1)" />
-					<do_if value="$OldUIRepValue ge 5">
+					<do_if value="($OldUIRepValue ge 5) or ($OldUIRepValue le -5)">
 						<set_value name="$NewUIRepValue" exact="$OldUIRepValue + $UIRelationChange" />
-						<set_value name="$AbsoluteRepValueChange" exact="$OldAbsoluteRepValue + $RepChangeNegativeorPositiveMod * (10^((sqrt($NewUIRepValue ^ 2)/10))/1000)" />
-						<set_value name="$NewAbsoluteRepValue" exact="[(($OldAbsoluteRepValue + $AbsoluteRepValueChange) * $RepChangeNegativeorPositiveMod), 1].min" />
+						<!-- =(10^(SQRT((S2+T2)^2)/10)/1000)*IF(S2+T2<0,-1,1) -->
+						<set_value name="$NewAbsoluteRepValue" exact="(10^(sqrt(($OldUIRepValue + $UIRelationChange) ^ 2)/10) / 1000 * (if ($OldUIRepValue + $UIRelationChange lt 0) then -1 else 1)" />
+						<do_if value="$NewAbsoluteRepValue lt -1">
+							<set_value name="$NewAbsoluteRepValue" exact="-1" />
+						</do_if>
+						<do_if value="$NewAbsoluteRepValue gt 1">
+							<set_value name="$NewAbsoluteRepValue" exact="1" />
+						</do_if>
+						<set_value name="$AbsoluteRepValueChange" exact="$NewAbsoluteRepValue - $OldAbsoluteRepValue" />
 					</do_if>
-					<do_if value="$OldUIRepValue lt 5 and $OldUIRepValue gt -5">
+					<do_if value="($OldUIRepValue lt 5) and ($OldUIRepValue gt -5)">
 						<set_value name="$NewUIRepValue" exact="$OldUIRepValue + $UIRelationChange" />
-						<set_value name="$AbsoluteRepValueChange" exact="$RepChangeNegativeorPositiveMod * ($UIRelationChange * 0.00064)" />
-						<set_value name="$NewAbsoluteRepValue" exact="$OldAbsoluteRepValue + $AbsoluteRepValueChange" />
-					</do_if>
-					<do_if value="$OldUIRepValue le -5">
-						<set_value name="$NewUIRepValue" exact="$OldUIRepValue + $UIRelationChange" />
-						<set_value name="$AbsoluteRepValueChange" exact="$OldAbsoluteRepValue - $RepChangeNegativeorPositiveMod * (10^((sqrt($NewUIRepValue ^ 2)/10))/1000)" />
-						<set_value name="$NewAbsoluteRepValue" exact="[(($OldAbsoluteRepValue - $AbsoluteRepValueChange) * $RepChangeNegativeorPositiveMod), -1].max" />
+						<set_value name="$NewAbsoluteRepValue" exact="$OldAbsoluteRepValue + ($UIRelationChange * 0.00064)" />
+						<set_value name="$AbsoluteRepValueChange" exact="$NewAbsoluteRepValue - $OldAbsoluteRepValue" />
 					</do_if>
 				</do_if>
 			</actions>
