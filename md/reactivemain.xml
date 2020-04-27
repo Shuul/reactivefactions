@@ -259,8 +259,8 @@
 					<do_if value="($OldUIRepValue ge 5) or ($OldUIRepValue le -5)">
 						<set_value name="$NewUIRepValue" exact="$OldUIRepValue + $UIRelationChange" />
 						<!-- =(10^(SQRT((S2+T2)^2)/10)/1000)*IF(S2+T2<0,-1,1) -->
-						<set_value name="$NewAbsoluteRepValue" exact="(10^(sqrt(($OldUIRepValue + $UIRelationChange) ^ 2)/10) / 1000 * (if ($OldUIRepValue + $UIRelationChange lt 0) then -1 else 1)" />
-						<do_if value="$NewAbsoluteRepValue lt -1">
+              <set_value name="$NewAbsoluteRepValue" exact="(10^(sqrt(($OldUIRepValue + $UIRelationChange) ^ 2)/10) / 1000) * (if ($OldUIRepValue + $UIRelationChange lt 0) then -1 else 1)" />
+            <do_if value="$NewAbsoluteRepValue lt -1">
 							<set_value name="$NewAbsoluteRepValue" exact="-1" />
 						</do_if>
 						<do_if value="$NewAbsoluteRepValue gt 1">
