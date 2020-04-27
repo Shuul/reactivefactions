@@ -2,7 +2,7 @@
 
 <mdscript name="Reactivemain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\x4 extract\libraries\md.xsd">
   <cues>
-    <cue name="ReactiveInit" version="6">
+    <cue name="ReactiveInit" version="7">
       <conditions>
         <check_any>
           <event_cue_signalled cue="md.Setup.GameStart" />
@@ -26,8 +26,11 @@
         <set_value name="$PlayerPowerFluff2" exact="'Your influence on galaxy arena grows and Major Faction start to pay close attention to your deals with their enemies. '"/>
         <set_value name="$PlayerPowerFluff3" exact="'You are acknowledged as powerful player on galaxy arena, pay attention to your actions as not everyone will like you to befreind their enemies.'"/>
         <set_value name="$PlayerPowerFluff4" exact="'Major Factions do now consider you to be equal to them, your positive deals with their enemies can lead to noticable consequences.'"/>
+		
+		<!-- setting time constraint variable -->
+		<set_value name="$NextPossibleRepLossTime" exact="player.age" />
      </actions>
-     <patch sinceversion="6">
+     <patch sinceversion="7">
       <!-- simple reset so the sub cues are called again. -->
       <reset_cue cue="this"/>
     </patch>
@@ -41,40 +44,40 @@
               <remove_value name="$PlayerPower" />
             </do_if> -->
 
-            <!-- <do_if value="$CivAssetCostModifier?">
-              <remove_value name="$CivAssetCostModifier"/>
-            </do_if> -->
-
-            <!-- cost modifier for civilian ships (NOT USED as of now) -->
-            <set_value name="$CivAssetCostModifier" exact="(6.5Cr)" />
+            <!-- cost modifier for civilian ships -->
+			<!-- using intergers so stick with whole, positive numbers (80 will be calculated as 80% for example) -->
+            <set_value name="$TradingAssetModifier" exact="80" />
+			<set_value name="$MiningAssetModifier" exact="70" />
+			<set_value name="$AuxillaryAssetModifier" exact="100" />
+			<set_value name="$ProductionAssetModifier" exact="100" />
 
             <!-- calculating total assets cost -->
             <find_object name="$PlayerAssetsList" owner="faction.player" space="player.galaxy"  multiple="true" recursive="true" />
             <do_for_each name="$Asset" in="$PlayerAssetsList">
               <do_if value="$Asset.value ge 150000Cr">
                 <do_if value="$Asset.primarypurpose == purpose.trade">
-                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value )/1Cr" operation="add" comment="round"/>
-                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value * $TradingAssetModifier / 100)/1Cr" operation="add" comment="round"/>
+                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with actual cost of ' + ($Asset.value)/1Cr + ' and weighted cost of ' + ($Asset.value * $TradingAssetModifier / 100)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_if>
 
                 <do_elseif value="$Asset.primarypurpose == purpose.mine">
-                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value )/1Cr" operation="add" comment="round"/>
-                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value * $MiningAssetModifier / 100)/1Cr" operation="add" comment="round"/>
+                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with actual cost of ' + ($Asset.value)/1Cr + ' and weighted cost of ' + ($Asset.value * $MiningAssetModifier / 100)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_elseif>
 
                 <do_elseif value="$Asset.primarypurpose == purpose.auxiliary">
-                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value )/1Cr" operation="add" comment="round"/>
-                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value * $AuxillaryAssetModifier / 100)/1Cr" operation="add" comment="round"/>
+                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with actual cost of ' + ($Asset.value)/1Cr + ' and weighted cost of ' + ($Asset.value * $AuxillaryAssetModifier / 100)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_elseif>
 
                 <do_elseif value="$Asset.primarypurpose == purpose.production">
-                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value )/1Cr" operation="add" comment="round"/>
-                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                  <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value * $ProductionAssetModifier / 100)/1Cr" operation="add" comment="round"/>
+                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with actual cost of ' + ($Asset.value)/1Cr + ' and weighted cost of ' + ($Asset.value * $ProductionAssetModifier / 100)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_elseif>
 
                 <do_else>
                   <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value)/1Cr" operation="add" comment="round"/>
-                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                  <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with actual cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_else>
               </do_if>
             </do_for_each>
@@ -169,10 +172,10 @@
             <event_player_relation_changed/>
             <!-- only for positive changes -->
             <check_value value="event.object == null and event.param != null and event.param2.{1} gt event.param2.{2}" />
-            <!-- Created a library for the check, max change will be ui value of -2 DA-->
-            <!-- <check_value value="[(event.param2.{1} - event.param2.{2}), 0.032].min" /> DA-->
+            <!-- only trigger once every # seconds -->
+			<check_value value="$NextPossibleRepLossTime ge player.age" />
 			<!-- to prevent running before power is checked DA-->
-		    	<check_value value="$PlayerPower != 99" />
+		    <check_value value="$PlayerPower != 99" />
           </conditions>
           <actions>
             <set_value name="$FactionMain" exact="event.param" />
@@ -185,8 +188,16 @@
             
             <get_factions_by_relation relation="killmilitary" faction="$FactionMain" result="$EnemiesList" />
 			<!-- we could just use remove_from_list here -->
-			<set_value name="$IgnoredListofEnemies" exact="[faction.buccaneers, faction.civilian, faction.criminal, faction.holyorderfanatic, faction.khaak, faction.smuggler, faction.trinity, faction.visitor, faction.xenon]" />
+			<set_value name="$IgnoredListofEnemies" exact="[faction.buccaneers, faction.civilian, faction.court, faction.criminal, faction.holyorderfanatic, faction.khaak, faction.smuggler, faction.trinity, faction.visitor, faction.xenon]" />
+			<!-- checking if any factions in ignored list are active. story stuff makes coding so much more tedious -->
+			<do_all exact="$EnemiesList.count" counter="$a">
+				<do_if value="($EnemiesList.{$a} == faction.buccaneers or $EnemiesList.{$a} == faction.court or $EnemiesList.{$a} == faction.holyorderfanatic or $EnemiesList.{$a} == faction.trinity) and ($EnemiesList.{$a}.isactive)">
+					<debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; Removed active faction from ignore list: ' + $EnemiesList.{$a}" output="false" append="true" />
+					<remove_from_list name="$IgnoredListofEnemies" exact="$EnemiesList.{$a}.isactive" multiple="true"/>
+				</do_if>
+			</do_all>
 			<remove_from_list name="$EnemiesList" list="$IgnoredListofEnemies" multiple="true"/>
+			<remove_value name="$a" />
             
             <do_for_each name="$Enemy" in="$EnemiesList">
 				<!-- Remove buccaneers, holyorderfanatic,  trinity when added. DA-->
@@ -231,6 +242,8 @@
 								<set_faction_relation faction="faction.player" otherfaction="$Enemy" value="$Enemy.relationto.{faction.player}" reason="null"/>
 								<debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was changed with ' + $Enemy + ' for: ' + $RepHit + ' due to change with ' + $FactionMain + ' rep diff was ' + $RepDiff + ' with current power level of ' + $PlayerPower + ' without notification.'" output="false" append="true" />
 							</do_else>
+							<!-- here is where we set the timer for how often this can trigger -->
+							<set_value name="$NextPossibleRepLossTime" exact="player.age + 30s" />
 						</do_if>
 						<do_elseif value="$Enemy.relationto.{$FactionMain} ge $Enemy.relationto.{faction.player}">
 							<debug_to_file name="'ReactiveRepUpdate'" directory="'ReactiveFactions'" text="player.age + '; rep was not changed with ' + $Enemy + ' for: ' + $RepHit + ' due to ' + $FactionMain + ' player already having a lower reputation with current power level of ' + $PlayerPower" output="false" append="true" />
@@ -258,8 +271,8 @@
 					<do_if value="($OldUIRepValue ge 5) or ($OldUIRepValue le -5)">
 						<set_value name="$NewUIRepValue" exact="$OldUIRepValue + $UIRelationChange" />
 						<!-- =(10^(SQRT((S2+T2)^2)/10)/1000)*IF(S2+T2<0,-1,1) -->
-              <set_value name="$NewAbsoluteRepValue" exact="(10^(sqrt(($OldUIRepValue + $UIRelationChange) ^ 2)/10) / 1000) * (if ($OldUIRepValue + $UIRelationChange lt 0) then -1 else 1)" />
-            <do_if value="$NewAbsoluteRepValue lt -1">
+						<set_value name="$NewAbsoluteRepValue" exact="(10^(sqrt(($OldUIRepValue + $UIRelationChange) ^ 2)/10) / 1000) * (if ($OldUIRepValue + $UIRelationChange lt 0) then -1 else 1)" />
+						<do_if value="$NewAbsoluteRepValue lt -1">
 							<set_value name="$NewAbsoluteRepValue" exact="-1" />
 						</do_if>
 						<do_if value="$NewAbsoluteRepValue gt 1">
