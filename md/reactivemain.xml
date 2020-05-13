@@ -2,7 +2,7 @@
 
 <mdscript name="Reactivemain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\x4 extract\libraries\md.xsd">
   <cues>
-    <cue name="ReactiveInit" version="7">
+    <cue name="ReactiveInit" version="9">
       <conditions>
         <check_any>
           <event_cue_signalled cue="md.Setup.GameStart" />
@@ -14,6 +14,7 @@
       
       <actions>
         <set_value name="$PlayerPower" exact="99" />
+        <show_help duration="10s" custom="'Reactive Faction Reputation mod ver. 1.6 is installed'"/>
         <!-- FLUFF for power levels -->
         <set_value name="$PlayerPowerName0" exact="'You are nameless privateer.'"/>
         <set_value name="$PlayerPowerName1" exact="'You are now Small Organization.'"/>
@@ -30,7 +31,7 @@
 		<!-- setting time constraint variable -->
 		<set_value name="$NextPossibleRepLossTime" exact="player.age" />
      </actions>
-     <patch sinceversion="7">
+     <patch sinceversion="9">
       <!-- simple reset so the sub cues are called again. -->
       <reset_cue cue="this"/>
     </patch>
@@ -46,11 +47,12 @@
 
             <!-- cost modifier for civilian ships -->
 			<!-- using intergers so stick with whole, positive numbers (80 will be calculated as 80% for example) -->
-      <set_value name="$TradingAssetModifier" exact="70" />
-			<set_value name="$MiningAssetModifier" exact="50" />
-			<set_value name="$AuxillaryAssetModifier" exact="80" />
-			<set_value name="$ProductionAssetModifier" exact="100" />
-
+      <set_value name="$TradingAssetModifier" exact="50" />
+			<set_value name="$MiningAssetModifier" exact="35" />
+			<set_value name="$AuxillaryAssetModifier" exact="50" />
+			<set_value name="$ProductionAssetModifier" exact="80" />
+      <set_value name="$NonShipyardWharfAssetModifier" exact="25" />
+      <set_value name="$ShipyardWharfAssetModifier" exact="70" />
             <!-- calculating total assets cost -->
             <find_object name="$PlayerAssetsList" owner="faction.player" space="player.galaxy"  multiple="true" recursive="true" />
             <do_for_each name="$Asset" in="$PlayerAssetsList">
@@ -75,6 +77,17 @@
                   <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with actual cost of ' + ($Asset.value)/1Cr + ' and weighted cost of ' + ($Asset.value * $ProductionAssetModifier / 100)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
                 </do_elseif>
 
+                <do_elseif value="$Asset.class == class.station">
+                  <do_if value="$Asset.isshipyard or $Asset.iswharf">
+                      <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value * $ShipyardWharfAssetModifier / 100)/1Cr" operation="add" comment="round"/>
+                      <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with actual cost of ' + ($Asset.value)/1Cr + ' and weighted cost of ' + ($Asset.value * $ShipyardWharfAssetModifier / 100)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                  </do_if>
+                  <do_else>
+                      <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value * $NonShipyardWharfAssetModifier / 100)/1Cr" operation="add" comment="round"/>
+                      <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with actual cost of ' + ($Asset.value)/1Cr + ' and weighted cost of ' + ($Asset.value * $NonShipyardWharfAssetModifier / 100)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
+                  </do_else>
+                </do_elseif>
+
                 <do_else>
                   <set_value name="$PlayerTotalAssetsCost" exact="($Asset.value)/1Cr" operation="add" comment="round"/>
                   <debug_to_file name="'ReactiveFactionsCalcAssets'" directory="'ReactiveFactions'" text="player.age + '; added ' + $Asset.macro + ' of type ' + $Asset.primarypurpose + ' with actual cost of ' + ($Asset.value)/1Cr + ' total cost now ' + $PlayerTotalAssetsCost" output="false" append="true" />
@@ -84,7 +97,7 @@
 
             <set_value name="$PlayerTotalAssetsCost" exact="(player.money)/1Cr"  operation="add" comment="round"/>
 
-            <do_if value="$PlayerTotalAssetsCost lt 125000000">
+            <do_if value="$PlayerTotalAssetsCost lt 175000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="0" />
                 <show_help duration="30s" custom="$PlayerPowerFluff0 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
@@ -100,7 +113,7 @@
                </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
             </do_if>
-            <do_elseif value="$PlayerTotalAssetsCost lt 250000000">
+            <do_elseif value="$PlayerTotalAssetsCost lt 350000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="1" />
                 <show_help duration="30s" custom="$PlayerPowerFluff1 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
@@ -116,7 +129,7 @@
               </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
             </do_elseif>
-            <do_elseif value="$PlayerTotalAssetsCost lt 500000000">
+            <do_elseif value="$PlayerTotalAssetsCost lt 700000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="2" />
                 <show_help duration="30s" custom="$PlayerPowerFluff2 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
@@ -132,7 +145,7 @@
               </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
             </do_elseif>
-            <do_elseif value="$PlayerTotalAssetsCost lt 1000000000">
+            <do_elseif value="$PlayerTotalAssetsCost lt 1200000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="3" />
                 <show_help duration="30s" custom="$PlayerPowerFluff3 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
