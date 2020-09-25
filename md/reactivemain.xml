@@ -14,19 +14,19 @@
       
       <actions>
         <set_value name="$PlayerPower" exact="99" />
-        <show_help duration="10s" custom="'Reactive Faction Reputation mod ver. 1.6 is installed'"/>
+        <show_help duration="10s" custom="{2005311642,1}"/>
         <!-- FLUFF for power levels -->
-        <set_value name="$PlayerPowerName0" exact="'You are nameless privateer.'"/>
-        <set_value name="$PlayerPowerName1" exact="'You are now Small Organization.'"/>
-        <set_value name="$PlayerPowerName2" exact="'You are now Large Organization.'"/>
-        <set_value name="$PlayerPowerName3" exact="'You are now Minor Faction.'"/>
-        <set_value name="$PlayerPowerName4" exact="'You are now Major Faction.'"/>
+        <set_value name="$PlayerPowerName0" exact="{2005311642,2}"/>
+        <set_value name="$PlayerPowerName1" exact="{2005311642,3}"/>
+        <set_value name="$PlayerPowerName2" exact="{2005311642,4}"/>
+        <set_value name="$PlayerPowerName3" exact="{2005311642,5}"/>
+        <set_value name="$PlayerPowerName4" exact="{2005311642,6}"/>
 
-        <set_value name="$PlayerPowerFluff0" exact="'You are considered a nameless privateer and not noticed by anyone and your actions with their enemies do not bother them.'"/>
-        <set_value name="$PlayerPowerFluff1" exact="'You are now considered as small organisation with limited influence, some of your positive deals may make their enemies a bit worried.'"/>
-        <set_value name="$PlayerPowerFluff2" exact="'Your influence on galaxy arena grows and Major Faction start to pay close attention to your deals with their enemies. '"/>
-        <set_value name="$PlayerPowerFluff3" exact="'You are acknowledged as powerful player on galaxy arena, pay attention to your actions as not everyone will like you to befreind their enemies.'"/>
-        <set_value name="$PlayerPowerFluff4" exact="'Major Factions do now consider you to be equal to them, your positive deals with their enemies can lead to noticable consequences.'"/>
+        <set_value name="$PlayerPowerFluff0" exact="{2005311642,7}"/>
+        <set_value name="$PlayerPowerFluff1" exact="{2005311642,8}"/>
+        <set_value name="$PlayerPowerFluff2" exact="{2005311642,9}"/>
+        <set_value name="$PlayerPowerFluff3" exact="{2005311642,10}"/>
+        <set_value name="$PlayerPowerFluff4" exact="{2005311642,11}"/>
 		
 		<!-- setting time constraint variable -->
 		<set_value name="$NextPossibleRepLossTime" exact="player.age" />
@@ -100,15 +100,15 @@
             <do_if value="$PlayerTotalAssetsCost lt 175000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="0" />
-                <show_help duration="30s" custom="$PlayerPowerFluff0 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
-                <write_to_logbook category="tips" title="$PlayerPowerName0" text="$PlayerPowerFluff0  + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
+                <show_help duration="30s" custom="$PlayerPowerFluff0 + '\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
+                <write_to_logbook category="tips" title="$PlayerPowerName0" text="$PlayerPowerFluff0 + '\n\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
               </do_if>
               <do_else>
                 <set_value name="$OldPlayerPower" exact="$PlayerPower" />
                 <set_value name="$PlayerPower" exact="0" />
                 <do_if value="$PlayerPower != $OldPlayerPower">
-                  <show_help duration="3s" custom="$PlayerPowerFluff0 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
-                  <write_to_logbook category="tips" title="$PlayerPowerName0" text="$PlayerPowerFluff0  + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
+                  <show_help duration="3s" custom="$PlayerPowerFluff0 + '\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
+                  <write_to_logbook category="tips" title="$PlayerPowerName0" text="$PlayerPowerFluff0  + '\n\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
                 </do_if>
                </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
@@ -116,15 +116,15 @@
             <do_elseif value="$PlayerTotalAssetsCost lt 350000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="1" />
-                <show_help duration="30s" custom="$PlayerPowerFluff1 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
-                <write_to_logbook category="tips" title="$PlayerPowerName1" text="$PlayerPowerFluff1  + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
+                <show_help duration="30s" custom="$PlayerPowerFluff1 + '\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
+                <write_to_logbook category="tips" title="$PlayerPowerName1" text="$PlayerPowerFluff1  + '\n\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
               </do_if>
               <do_else>
                 <set_value name="$OldPlayerPower" exact="$PlayerPower" />
                 <set_value name="$PlayerPower" exact="1" />
                 <do_if value="$PlayerPower != $OldPlayerPower">
-                  <show_help duration="30s" custom="$PlayerPowerFluff1 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
-                  <write_to_logbook category="tips" title="$PlayerPowerName1" text="$PlayerPowerFluff1 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
+                  <show_help duration="30s" custom="$PlayerPowerFluff1 + '\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
+                  <write_to_logbook category="tips" title="$PlayerPowerName1" text="$PlayerPowerFluff1 + '\n\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
                 </do_if>
               </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
@@ -132,15 +132,15 @@
             <do_elseif value="$PlayerTotalAssetsCost lt 700000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="2" />
-                <show_help duration="30s" custom="$PlayerPowerFluff2 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
-                <write_to_logbook category="tips" title="$PlayerPowerName2" text="$PlayerPowerFluff2  + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
+                <show_help duration="30s" custom="$PlayerPowerFluff2 + '\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
+                <write_to_logbook category="tips" title="$PlayerPowerName2" text="$PlayerPowerFluff2  + '\n\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
               </do_if>
               <do_else>
                 <set_value name="$OldPlayerPower" exact="$PlayerPower" />
                 <set_value name="$PlayerPower" exact="2" />
                 <do_if value="$PlayerPower != $OldPlayerPower">
-                  <show_help duration="30s" custom="$PlayerPowerFluff2 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
-                  <write_to_logbook category="tips" title="$PlayerPowerName2" text="$PlayerPowerFluff2  + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
+                  <show_help duration="30s" custom="$PlayerPowerFluff2 + '\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
+                  <write_to_logbook category="tips" title="$PlayerPowerName2" text="$PlayerPowerFluff2  + '\n\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
                 </do_if>
               </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
@@ -148,15 +148,15 @@
             <do_elseif value="$PlayerTotalAssetsCost lt 1200000000">
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="3" />
-                <show_help duration="30s" custom="$PlayerPowerFluff3 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
-                <write_to_logbook category="tips" title="$PlayerPowerName3" text="$PlayerPowerFluff3  + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
+                <show_help duration="30s" custom="$PlayerPowerFluff3 + '\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
+                <write_to_logbook category="tips" title="$PlayerPowerName3" text="$PlayerPowerFluff3  + '\n\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
               </do_if>
               <do_else>
                 <set_value name="$OldPlayerPower" exact="$PlayerPower" />
                 <set_value name="$PlayerPower" exact="3" />
                 <do_if value="$PlayerPower != $OldPlayerPower">
-                  <show_help duration="30s" custom="$PlayerPowerFluff3 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
-                  <write_to_logbook category="tips" title="$PlayerPowerName3" text="$PlayerPowerFluff3  + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
+                  <show_help duration="30s" custom="$PlayerPowerFluff3 + '\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
+                  <write_to_logbook category="tips" title="$PlayerPowerName3" text="$PlayerPowerFluff3  + '\n\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
                 </do_if> 
               </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
@@ -164,15 +164,15 @@
             <do_else>
               <do_if value="$PlayerPower == 99">
                 <set_value name="$PlayerPower" exact="4" />
-                <show_help duration="30s" custom="$PlayerPowerFluff4 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
-                <write_to_logbook category="tips" title="$PlayerPowerName4" text="$PlayerPowerFluff4  + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
+                <show_help duration="30s" custom="$PlayerPowerFluff4 + '\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
+                <write_to_logbook category="tips" title="$PlayerPowerName4" text="$PlayerPowerFluff4  + '\n\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
               </do_if>
               <do_else>
                 <set_value name="$OldPlayerPower" exact="$PlayerPower" />
                 <set_value name="$PlayerPower" exact="4" />
                 <do_if value="$PlayerPower != $OldPlayerPower">
-                  <show_help duration="30s" custom="$PlayerPowerFluff4 + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
-                  <write_to_logbook category="tips" title="$PlayerPowerName4" text="$PlayerPowerFluff4  + ' Your total assets cost estiamted at: ' + $PlayerTotalAssetsCost" />
+                  <show_help duration="30s" custom="$PlayerPowerFluff4 + '\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
+                  <write_to_logbook category="tips" title="$PlayerPowerName4" text="$PlayerPowerFluff4  + '\n\n' + {2005311642,12} + ' ' + $PlayerTotalAssetsCost" />
                 </do_if>
               </do_else>
               <debug_to_file name="'ReactiveFactions'" directory="'ReactiveFactions'" text="player.age + '; player assets cost is ' + $PlayerTotalAssetsCost + ' and power level of ' + $PlayerPower" output="false" append="true" />
