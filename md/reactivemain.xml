@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<mdscript name="Reactivemain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\x4 extract\libraries\md.xsd">
+<mdscript name="Reactivemain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="E:\x4 extract\libraries\md.xsd">
   <cues>
     <cue name="ReactiveInit" version="9">
       <conditions>
@@ -201,7 +201,7 @@
             
             <get_factions_by_relation relation="killmilitary" faction="$FactionMain" result="$EnemiesList" />
 			<!-- we could just use remove_from_list here -->
-			<set_value name="$IgnoredListofEnemies" exact="[faction.buccaneers, faction.civilian, faction.court, faction.criminal, faction.holyorderfanatic, faction.khaak, faction.smuggler, faction.trinity, faction.visitor, faction.xenon]" />
+			<set_value name="$IgnoredListofEnemies" exact="[faction.buccaneers, faction.civilian, faction.court, faction.criminal, faction.holyorderfanatic, faction.khaak, faction.smuggler, faction.trinity, faction.visitor, faction.xenon, faction.yaki]" />
 			<!-- checking if any factions in ignored list are active. story stuff makes coding so much more tedious -->
 			<do_all exact="$EnemiesList.count" counter="$a">
 				<do_if value="($EnemiesList.{$a} == faction.buccaneers or $EnemiesList.{$a} == faction.court or $EnemiesList.{$a} == faction.holyorderfanatic or $EnemiesList.{$a} == faction.trinity) and ($EnemiesList.{$a}.isactive)">
